@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class Preferences : MonoBehaviour {
 
-    private sizeParam fieldSize = sizeParam.x3;
+    private static sizeParam fieldSize = sizeParam.x3;
 
     private bool isSound = true;
 
@@ -17,6 +17,11 @@ public class Preferences : MonoBehaviour {
         ParamsButtonsEvents.x4fieldEvent.AddListener(() => { fieldSize = sizeParam.x4; Debug.Log(2); });
         ParamsButtonsEvents.x5fieldEvent.AddListener(() => { fieldSize = sizeParam.x5; Debug.Log(3); });
     }
+
+    public static sizeParam GetFieldSize()
+    {
+        return fieldSize;
+    }
 	
-    enum sizeParam { x3,x4,x5};
+    public enum sizeParam { x3 = 9,x4 = 16,x5 = 25};
 }
