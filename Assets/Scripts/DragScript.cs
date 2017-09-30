@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PointHandler : MonoBehaviour {
+public class DragScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public struct FieldElement {
-
+public class FieldElement {
+    
     public Vector2 Coordinate;
     public bool isFree;
     public GameObject fieldObject;

@@ -4,37 +4,43 @@ using UnityEngine;
 
 public class FieldContainer : MonoBehaviour {
 
-    public static List<FieldElement> fields;
+    public static List<FieldElement> fields = new List<FieldElement>();
 
     public GameObject prefab;
 
-    private List<Vector2> fieldsCoord3x3;
+    private const float zValue = 3;
 
-    private List<Vector2> fieldsCoord4x4;
+    private List<GameObject> elementsArray = new List<GameObject>();
 
     void Start () {
-
-        fieldsCoord3x3 = new List<Vector2>();
-
-        fieldsCoord4x4 = new List<Vector2>();
-
-        ArrayCoordCreater(fieldsCoord3x3, "Field 3_");
-
-        ArrayCoordCreater(fieldsCoord4x4, "Field 4_");
-
-        if (fields == null)
-        {
-            fields = new List<FieldElement>();
-
-            int size = (int)Preferences.GetFieldSize();
-            //int size = 16;
-            if (size == 9)
-                ListFieldCreator(fieldsCoord3x3);
-            if (size == 16)
-                ListFieldCreator(fieldsCoord4x4);
-        }
-        
+        InitMethod();
+        RestartEvent.restartEvent.AddListener(()=> { ClearMethod(); InitMethod(); });
     }
+
+    private void ClearMethod()
+    {
+        Debug.Log("restarted");
+    }
+
+    private void InitMethod()
+    {
+        int size = (int)Preferences.GetFieldSize();
+        //int size = 16;
+        switch (size)
+        {
+            case 9: ListFieldCreator(new FieldsCoord("Field 3_",transform).GetCollection()); break;
+
+            case 16: ListFieldCreator(new FieldsCoord("Field 4_", transform).GetCollection()); break;
+
+        }
+
+    }
+
+    public static List<FieldElement> GetCollection()
+    {
+        return fields;
+    }
+
     private void ListFieldCreator(List<Vector2> list)
     {
         System.Random rnd = new System.Random();
@@ -47,10 +53,13 @@ public class FieldContainer : MonoBehaviour {
             if(inc != index)
             {
                 GameObject newObject = (GameObject)Instantiate(prefab);
+                elementsArray.Add(newObject);
+                newObject.name += Time.deltaTime;
                 newObject.transform.parent = this.transform;
-                newObject.transform.localPosition = new Vector3(vect.x, vect.y, 3);
+                newObject.transform.localPosition = new Vector3(vect.x, vect.y, zValue);
                 newObject.GetComponentInChildren<TextMesh>().text = inc.ToString();
-                fields.Add(new FieldElement(vect, newObject));
+                FieldElement newField = new FieldElement(vect, newObject);
+                fields.Add(newField);
                 inc++;
             }
             else
@@ -58,19 +67,25 @@ public class FieldContainer : MonoBehaviour {
                 fields.Add(new FieldElement(vect));
                 index = -1;
             }
-            
         }
-
     }
 
-    private void ArrayCoordCreater(List<Vector2> list, string str)
+    
+    private class FieldsCoord
     {
-        foreach (Transform child in this.transform)
+        private List<Vector2> fieldsCoord;
+
+        public FieldsCoord(string str, Transform transformComp)
         {
-            if(child.name.Contains(str))
+            fieldsCoord = new List<Vector2>();
+            foreach (Transform child in transformComp)
             {
-                list.Add(new Vector2(child.localPosition.x, child.localPosition.y));
+                if (child.name.Contains(str) && !child.name.Contains("Clone"))
+                {
+                    fieldsCoord.Add(new Vector2(child.localPosition.x, child.localPosition.y));
+                }
             }
         }
+        public List<Vector2> GetCollection() { return fieldsCoord; }
     }
 }
