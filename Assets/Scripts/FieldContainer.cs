@@ -26,9 +26,9 @@ public class FieldContainer : MonoBehaviour {
         {
             fields = new List<FieldElement>();
 
-            //int size = (int)Preferences.GetFieldSize();
-            int size = 16;
-            if(size == 9)
+            int size = (int)Preferences.GetFieldSize();
+            //int size = 16;
+            if (size == 9)
                 ListFieldCreator(fieldsCoord3x3);
             if (size == 16)
                 ListFieldCreator(fieldsCoord4x4);
@@ -44,7 +44,7 @@ public class FieldContainer : MonoBehaviour {
         //Debug.Log(index);
         foreach (Vector2 vect in shuffledList)
         {
-            if(inc !=   index)
+            if(inc != index)
             {
                 GameObject newObject = (GameObject)Instantiate(prefab);
                 newObject.transform.parent = this.transform;
