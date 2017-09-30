@@ -8,7 +8,7 @@ public class FieldContainer : MonoBehaviour {
 
     public GameObject prefab;
 
-    private const float zValue = 3;
+    public const float zValue = 3;
 
     private List<GameObject> elementsArray = new List<GameObject>();
 
@@ -22,6 +22,15 @@ public class FieldContainer : MonoBehaviour {
         Debug.Log("restarted");
     }
 
+    public static bool HasXRowFreeField()
+    {
+        return false;
+    }
+    public static bool HasYRowFreeField()
+    {
+        return true;
+    }
+
     private void InitMethod()
     {
         int size = (int)Preferences.GetFieldSize();
@@ -33,7 +42,6 @@ public class FieldContainer : MonoBehaviour {
             case 16: ListFieldCreator(new FieldsCoord("Field 4_", transform).GetCollection()); break;
 
         }
-
     }
 
     public static List<FieldElement> GetCollection()
