@@ -1,22 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using DG.Tweening;
 
 public class DragScript : MonoBehaviour {
 
     private Vector3 screenPoint;
-    private Vector3 offset;
+
+    private bool yAxisFree = false;
+
+    private bool xAxisFree = false;
 
     void OnMouseDown()
     {
         screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+
+        if (MovementHandler.HasXRowFreeField(transform.localPosition.x))
+            xAxisFree = true;
+
+        if (MovementHandler.HasXRowFreeField(transform.localPosition.y))
+            yAxisFree = true;
     }
 
     void OnMouseDrag()
     {
-        Vector3 cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) + offset;
-        transform.position = cursorPosition;
+        if(xAxisFree)
+        {
+            Vector3 cursorPoint = new Vector3(Input.mousePosition.x, screenPoint.y, screenPoint.z);
+            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) ;
+            transform.position = cursorPosition;
+        }
+        if (yAxisFree)
+        {
+            Vector3 cursorPoint = new Vector3(screenPoint.x, Input.mousePosition.y, screenPoint.z);
+            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) ;
+            transform.position = cursorPosition;
+        }
+    }
+    void OnMouseUp()
+    {
+        yAxisFree = false;
+        xAxisFree = false;
+        Debug.Log(MovementHandler.GetObjectPosition(this.gameObject));
+        gameObject.transform.DOLocalMove(MovementHandler.GetObjectPosition(this.gameObject),0.5f);
+        //Debug.Log();
     }
 }

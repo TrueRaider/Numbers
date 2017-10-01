@@ -2,9 +2,10 @@
 using System.Linq;
 using UnityEngine;
 
-public class FieldContainer : MonoBehaviour {
+public class FieldContainer : MonoBehaviour
+{
 
-    public static List<FieldElement> fields = new List<FieldElement>();
+    private static List<FieldElement> fields = new List<FieldElement>();
 
     public GameObject prefab;
 
@@ -12,23 +13,15 @@ public class FieldContainer : MonoBehaviour {
 
     private List<GameObject> elementsArray = new List<GameObject>();
 
-    void Start () {
+    void Start()
+    {
         InitMethod();
-        RestartEvent.restartEvent.AddListener(()=> { ClearMethod(); InitMethod(); });
+        RestartEvent.restartEvent.AddListener(() => { ClearMethod(); InitMethod(); });
     }
 
     private void ClearMethod()
     {
         Debug.Log("restarted");
-    }
-
-    public static bool HasXRowFreeField()
-    {
-        return false;
-    }
-    public static bool HasYRowFreeField()
-    {
-        return true;
     }
 
     private void InitMethod()
@@ -37,7 +30,7 @@ public class FieldContainer : MonoBehaviour {
         //int size = 16;
         switch (size)
         {
-            case 9: ListFieldCreator(new FieldsCoord("Field 3_",transform).GetCollection()); break;
+            case 9: ListFieldCreator(new FieldsCoord("Field 3_", transform).GetCollection()); break;
 
             case 16: ListFieldCreator(new FieldsCoord("Field 4_", transform).GetCollection()); break;
 
@@ -53,12 +46,11 @@ public class FieldContainer : MonoBehaviour {
     {
         System.Random rnd = new System.Random();
         var shuffledList = list.OrderBy(item => rnd.Next());
-        int index = rnd.Next(list.Count);
+        int index = 1 + rnd.Next(list.Count);
         int inc = 1;
-        //Debug.Log(index);
         foreach (Vector2 vect in shuffledList)
         {
-            if(inc != index)
+            if (inc != index)
             {
                 GameObject newObject = (GameObject)Instantiate(prefab);
                 elementsArray.Add(newObject);
@@ -78,7 +70,7 @@ public class FieldContainer : MonoBehaviour {
         }
     }
 
-    
+
     private class FieldsCoord
     {
         private List<Vector2> fieldsCoord;
