@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FieldContainer : MonoBehaviour
 {
+    private static Vector2 extremeBorderPoint1;
+    private static Vector2 extremeBorderPoint2;
 
     private static List<FieldElement> fields = new List<FieldElement>();
 
@@ -30,11 +32,27 @@ public class FieldContainer : MonoBehaviour
         //int size = 16;
         switch (size)
         {
-            case 9: ListFieldCreator(new FieldsCoord("Field 3_", transform).GetCollection()); break;
+            case 9:
+                ListFieldCreator(new FieldsCoord("Field 3_", transform).GetCollection());
+                extremeBorderPoint1 = new Vector2(5, 7);
+                extremeBorderPoint2 = new Vector2(-4,-2f);
+                break;
 
-            case 16: ListFieldCreator(new FieldsCoord("Field 4_", transform).GetCollection()); break;
+            case 16:
+                ListFieldCreator(new FieldsCoord("Field 4_", transform).GetCollection());
+
+                break;
 
         }
+    }
+
+    public static Vector2 GetExtremeBorderPoint1()
+    {
+        return extremeBorderPoint1;
+    }
+    public static Vector2 GetExtremeBorderPoint2()
+    {
+        return extremeBorderPoint2;
     }
 
     public static List<FieldElement> GetCollection()
@@ -57,6 +75,7 @@ public class FieldContainer : MonoBehaviour
                 newObject.name += Time.deltaTime;
                 newObject.transform.parent = this.transform;
                 newObject.transform.localPosition = new Vector3(vect.x, vect.y, zValue);
+                //Debug.Log(newObject.transform.localPosition);
                 newObject.GetComponentInChildren<TextMesh>().text = inc.ToString();
                 FieldElement newField = new FieldElement(vect, newObject);
                 fields.Add(newField);

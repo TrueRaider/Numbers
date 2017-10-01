@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class DragScript : MonoBehaviour {
 
@@ -16,30 +17,40 @@ public class DragScript : MonoBehaviour {
         if (MovementHandler.HasXRowFreeField(transform.localPosition.x))
             xAxisFree = true;
 
-        if (MovementHandler.HasXRowFreeField(transform.localPosition.y))
+        if (MovementHandler.HasYRowFreeField(transform.localPosition.y))
             yAxisFree = true;
     }
 
     void OnMouseDrag()
     {
-        if(xAxisFree)
+        if (xAxisFree || yAxisFree)
         {
-            Vector3 cursorPoint = new Vector3(Input.mousePosition.x, screenPoint.y, screenPoint.z);
-            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) ;
-            transform.position = cursorPosition;
+            if (xAxisFree)
+            {
+                Vector3 cursorPoint = new Vector3(screenPoint.x, Input.mousePosition.y, screenPoint.z);
+                Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint);
+                if (!MovementHandler.CanBeMoved(cursorPosition))
+                    return;
+                transform.position = cursorPosition;
+                List<FieldElement> newContainer = MovementHandler.GetOsculantObjectsX(transform.localPosition);
+            }
+            if (yAxisFree)
+            {
+                Vector3 cursorPoint = new Vector3(Input.mousePosition.x, screenPoint.y, screenPoint.z);
+                Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint);
+                if (!MovementHandler.CanBeMoved(cursorPosition))
+                    return;
+                transform.position = cursorPosition;
+                List<FieldElement> newContainer = MovementHandler.GetOsculantObjectsY(transform.localPosition);
+            }
         }
-        if (yAxisFree)
-        {
-            Vector3 cursorPoint = new Vector3(screenPoint.x, Input.mousePosition.y, screenPoint.z);
-            Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(cursorPoint) ;
-            transform.position = cursorPosition;
-        }
+        
     }
     void OnMouseUp()
     {
         yAxisFree = false;
         xAxisFree = false;
-        Debug.Log(MovementHandler.GetObjectPosition(this.gameObject));
+        //Debug.Log(MovementHandler.GetObjectPosition(this.gameObject));
         gameObject.transform.DOLocalMove(MovementHandler.GetObjectPosition(this.gameObject),0.5f);
         //Debug.Log();
     }
