@@ -35,6 +35,35 @@ public static class MovementHandler  {
         return false;
     }
 
+    public static void newHoldPoint(GameObject obj)
+    {
+        Vector2 originalVectorPosition = FieldContainer.GetFieldElementByGameObject(obj).Coordinate;
+        Vector2 newVectorPosition = FieldContainer.GetFieldElementByGameObject(obj).Coordinate;
+        float distance = Vector2.Distance(FieldContainer.GetFieldElementByGameObject(obj).Coordinate, (Vector2)obj.transform.localPosition);
+        bool isChanged = false;
+        foreach (FieldElement field in FieldContainer.GetCollection())
+        {
+            if(field.isFree)
+            {
+                float tempDistance = Vector2.Distance(field.Coordinate, (Vector2)obj.transform.localPosition);
+
+                if (tempDistance <= distance)
+                {
+                    newVectorPosition = field.Coordinate;
+                    isChanged = true;
+                }
+            }
+            
+        }
+        FieldContainer.SetNewCoordinates(obj,newVectorPosition);
+
+        if(isChanged)
+        {
+            FieldContainer.GetFreeFieldElement().Coordinate = originalVectorPosition;
+        }
+
+    }
+
     public static Vector3 GetObjectPosition(GameObject obj)
     {
         Vector3 vect = new Vector3();
@@ -49,7 +78,7 @@ public static class MovementHandler  {
         return vect;
     }
 
-    public static List<FieldElement> GetOsculantObjectsX(Vector2 vect)
+    public static List<FieldElement> GetOsculantObjects(Vector2 vect, bool onAxisX, bool onAxisY) //TODO
     {
         List<FieldElement> newList = new List<FieldElement>();
 
@@ -59,35 +88,23 @@ public static class MovementHandler  {
         {
             if (field.isFree) { freeFieldPosition = field.Coordinate; }
         }
-        int inc = 0;
         foreach (FieldElement field in FieldContainer.GetCollection())
         {
-            if (!field.isFree && vect.y == field.Coordinate.y && field.Coordinate.y == freeFieldPosition.y)
+            if(field.Coordinate != vect && onAxisX)
             {
-                inc++;
-                Debug.Log(inc);
+                if (!field.isFree && vect.x == field.Coordinate.x && field.Coordinate.x == freeFieldPosition.x)
+                {
+                    if ((vect.y > field.Coordinate.y && field.Coordinate.y > freeFieldPosition.y) || (vect.y < field.Coordinate.y && field.Coordinate.y < freeFieldPosition.y))
+                        newList.Add(field);
+                }
             }
-        }
-
-        return newList;
-    }
-    public static List<FieldElement> GetOsculantObjectsY(Vector2 vect)
-    {
-        List<FieldElement> newList = new List<FieldElement>();
-
-        Vector2 freeFieldPosition = new Vector2();
-
-        foreach (FieldElement field in FieldContainer.GetCollection())
-        {
-            if (field.isFree) { freeFieldPosition = field.Coordinate; }
-        }
-        int inc = 0;
-        foreach (FieldElement field in FieldContainer.GetCollection())
-        {
-            if (!field.isFree && vect.x == field.Coordinate.x && field.Coordinate.x == freeFieldPosition.x)
+            if (field.Coordinate != vect && onAxisY)
             {
-                inc++;
-                Debug.Log(inc);
+                if (!field.isFree && vect.y == field.Coordinate.y && field.Coordinate.y == freeFieldPosition.y )
+                {
+                    if((vect.x > field.Coordinate.x && field.Coordinate.x > freeFieldPosition.x) || (vect.x < field.Coordinate.x && field.Coordinate.x < freeFieldPosition.x))
+                        newList.Add(field);
+                }
             }
         }
 

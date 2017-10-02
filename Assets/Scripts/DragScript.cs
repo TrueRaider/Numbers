@@ -10,6 +10,8 @@ public class DragScript : MonoBehaviour {
 
     private bool xAxisFree = false;
 
+    private List<FieldElement> translatedObjects;
+
     void OnMouseDown()
     {
         screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
@@ -19,6 +21,9 @@ public class DragScript : MonoBehaviour {
 
         if (MovementHandler.HasYRowFreeField(transform.localPosition.y))
             yAxisFree = true;
+
+        if (xAxisFree || yAxisFree)
+            translatedObjects = MovementHandler.GetOsculantObjects(transform.localPosition, xAxisFree, yAxisFree);
     }
 
     void OnMouseDrag()
@@ -32,7 +37,10 @@ public class DragScript : MonoBehaviour {
                 if (!MovementHandler.CanBeMoved(cursorPosition))
                     return;
                 transform.position = cursorPosition;
-                List<FieldElement> newContainer = MovementHandler.GetOsculantObjectsX(transform.localPosition);
+                foreach(FieldElement field in translatedObjects)
+                {
+                    field.fieldObject.transform.position = cursorPosition + (field.fieldObject.transform.position - transform.position);
+                }
             }
             if (yAxisFree)
             {
@@ -41,17 +49,24 @@ public class DragScript : MonoBehaviour {
                 if (!MovementHandler.CanBeMoved(cursorPosition))
                     return;
                 transform.position = cursorPosition;
-                List<FieldElement> newContainer = MovementHandler.GetOsculantObjectsY(transform.localPosition);
+                foreach (FieldElement field in translatedObjects)
+                {
+                    field.fieldObject.transform.position = cursorPosition + (field.fieldObject.transform.position - transform.position);
+                }
             }
         }
         
     }
     void OnMouseUp()
     {
-        yAxisFree = false;
-        xAxisFree = false;
-        //Debug.Log(MovementHandler.GetObjectPosition(this.gameObject));
-        gameObject.transform.DOLocalMove(MovementHandler.GetObjectPosition(this.gameObject),0.5f);
-        //Debug.Log();
+        if (xAxisFree || yAxisFree)
+        {
+            yAxisFree = false;
+            xAxisFree = false;
+            MovementHandler.newHoldPoint(this.gameObject);
+            gameObject.transform.DOLocalMove(MovementHandler.GetObjectPosition(this.gameObject), 0.5f);
+            if (translatedObjects != null && translatedObjects.Count > 0)
+                translatedObjects.Clear();
+        }
     }
 }

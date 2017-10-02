@@ -26,6 +26,24 @@ public class FieldContainer : MonoBehaviour
         Debug.Log("restarted");
     }
 
+    public static FieldElement GetFieldElementByGameObject(GameObject obj)
+    {
+        FieldElement tempField = FieldContainer.GetCollection().Find(x => x.fieldObject == obj);
+        return tempField;
+    }
+
+    public static FieldElement GetFreeFieldElement()
+    {
+        FieldElement tempField = FieldContainer.GetCollection().Find(x => x.isFree == true);
+        return tempField;
+    }
+
+    public static void SetNewCoordinates(GameObject obj,Vector2 newValues)
+    {
+        FieldElement tempField = FieldContainer.GetCollection().Find(x => x.fieldObject == obj);
+        tempField.Coordinate = newValues; 
+    }
+
     private void InitMethod()
     {
         int size = (int)Preferences.GetFieldSize();
@@ -40,9 +58,7 @@ public class FieldContainer : MonoBehaviour
 
             case 16:
                 ListFieldCreator(new FieldsCoord("Field 4_", transform).GetCollection());
-
                 break;
-
         }
     }
 
@@ -88,7 +104,6 @@ public class FieldContainer : MonoBehaviour
             }
         }
     }
-
 
     private class FieldsCoord
     {

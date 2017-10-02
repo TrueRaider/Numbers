@@ -19,6 +19,10 @@ public class FieldElement {
         isFree = true;
     }
 
+    public FieldElement()
+    {
+    }
+
     public GameObject FreeField()
     {
         isFree = true;

@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 
 public class Preferences : MonoBehaviour {
 
     private static sizeParam fieldSize = sizeParam.x3;
 
-    private bool isSound = true;
+    //private bool isSound = true;
 
     void Awake()
     {
