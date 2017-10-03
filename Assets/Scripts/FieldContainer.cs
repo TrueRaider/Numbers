@@ -23,7 +23,7 @@ public class FieldContainer : MonoBehaviour
 
     private void ClearMethod()
     {
-        Debug.Log("restarted");
+        fields.Clear();
     }
 
     public static FieldElement GetFieldElementByGameObject(GameObject obj)
@@ -52,12 +52,14 @@ public class FieldContainer : MonoBehaviour
         {
             case 9:
                 ListFieldCreator(new FieldsCoord("Field 3_", transform).GetCollection());
-                extremeBorderPoint1 = new Vector2(5, 7);
-                extremeBorderPoint2 = new Vector2(-4,-2f);
+                extremeBorderPoint1 = new Vector2(3, 5);
+                extremeBorderPoint2 = new Vector2(-3f,0f);
                 break;
 
             case 16:
                 ListFieldCreator(new FieldsCoord("Field 4_", transform).GetCollection());
+                extremeBorderPoint1 = new Vector2(4.3f, 6);
+                extremeBorderPoint2 = new Vector2(-5, -5f);
                 break;
         }
     }
@@ -93,7 +95,7 @@ public class FieldContainer : MonoBehaviour
                 newObject.transform.localPosition = new Vector3(vect.x, vect.y, zValue);
                 //Debug.Log(newObject.transform.localPosition);
                 newObject.GetComponentInChildren<TextMesh>().text = inc.ToString();
-                FieldElement newField = new FieldElement(vect, newObject);
+                FieldElement newField = new FieldElement(vect, newObject,inc);
                 fields.Add(newField);
                 inc++;
             }
